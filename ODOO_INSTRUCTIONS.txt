@@ -1,0 +1,185 @@
+═══════════════════════════════════════════════════════════════════
+  AEKAMBER SOLUTIONS — ODOO WEBSITE BUILDER INTEGRATION GUIDE
+  Static HTML/CSS/JS Package — No React, No Build Tools Required
+═══════════════════════════════════════════════════════════════════
+
+FILES IN THIS PACKAGE
+──────────────────────
+  styles.css          ← All CSS styles (brand, layout, animations)
+  script.js           ← All JavaScript (carousel, tabs, FAQ, etc.)
+  index.html          ← Home page (full standalone preview)
+  services.html       ← Services page
+  about.html          ← About page
+  contact.html        ← Contact page
+  images/
+    logo-white.png    ← White/transparent logo (for dark backgrounds)
+    logo-inline.png   ← Color logo (for white/light backgrounds)
+
+QUICK TEST (BEFORE ODOO)
+──────────────────────────
+Open index.html in any modern browser — all 4 pages work
+standalone. The full site is functional with navigation,
+animations, carousel, tabs, FAQ, and contact form.
+
+═══════════════════════════════════════════════════════════════════
+  ODOO INTEGRATION — STEP-BY-STEP
+═══════════════════════════════════════════════════════════════════
+
+STEP 1 — UPLOAD LOGOS TO ODOO MEDIA LIBRARY
+─────────────────────────────────────────────
+1. Go to: Website > Media > Images (or Configuration > Media)
+2. Upload: logo-white.png and logo-inline.png
+3. After upload, right-click each image → "Copy image address"
+4. You will get URLs like: /web/image/ir.attachment/123/datas
+5. Replace in HTML files:
+     images/logo-white.png   →  your Odoo URL for logo-white
+     images/logo-inline.png  →  your Odoo URL for logo-inline
+
+STEP 2 — ADD THE CSS
+──────────────────────
+Option A (Recommended — Theme Custom CSS):
+  1. Go to: Website > Configuration > Website Settings
+  2. Click "Edit" on your website
+  3. Go to: Customize > Edit Code (or Theme > Custom CSS)
+  4. Paste the ENTIRE contents of styles.css
+  5. Save
+
+Option B (HTML Block inline):
+  Copy the CSS content, wrap in <style> tags, and paste at the
+  TOP of your first HTML block on each page.
+
+STEP 3 — ADD THE JAVASCRIPT
+─────────────────────────────
+Option A (Recommended — Website Custom JS):
+  1. Go to: Website > Configuration > Website Settings
+  2. Find: "Custom Code" or "Custom HTML/JS"
+  3. Paste the ENTIRE contents of script.js into the Footer JS area
+  4. Save
+
+Option B (HTML Block at page bottom):
+  Paste at the bottom of any HTML block:
+  <script>
+    // [paste entire script.js content here]
+  </script>
+
+STEP 4 — CREATE ODOO PAGES & PASTE HTML
+─────────────────────────────────────────
+For EACH page (Home, Services, About, Contact):
+
+  a) In Odoo Website Builder, create a new page OR open existing
+  b) Enter Edit mode (click "Edit" button)
+  c) Hide/remove Odoo's default content blocks (keep header/footer
+     if you want Odoo's navigation, OR use the full custom navbar
+     from the HTML files)
+  d) Add a "Custom HTML" block (drag from building blocks panel)
+  e) Click the HTML block → "Edit" → switch to code/HTML view
+  f) Paste the BODY CONTENT from the corresponding HTML file:
+       Home page     → copy everything between <body> and </body>
+                       from index.html
+       Services page → from services.html
+       About page    → from about.html
+       Contact page  → from contact.html
+  g) Save the page
+
+STEP 5 — UPDATE INTERNAL LINKS
+─────────────────────────────────
+The HTML files use relative links like "services.html".
+In Odoo, update these to match your actual Odoo page URLs:
+
+  index.html    →  /  (or your homepage URL)
+  services.html →  /services  (or whatever you name the page)
+  about.html    →  /about
+  contact.html  →  /contact
+
+Find and replace in the HTML:
+  href="index.html"    →  href="/"
+  href="services.html" →  href="/services"
+  href="about.html"    →  href="/about"
+  href="contact.html"  →  href="/contact"
+
+═══════════════════════════════════════════════════════════════════
+  ODOO NAVBAR — 2 OPTIONS
+═══════════════════════════════════════════════════════════════════
+
+OPTION A: Use Odoo's built-in header
+  → Remove the <nav> and mobile menu sections from the HTML
+  → Customize Odoo's native header with your logo and menu items
+  → This integrates better with Odoo's CMS routing
+
+OPTION B: Use the custom navbar from the HTML (full override)
+  → Keep the navbar HTML as-is
+  → Go to Odoo > Website > Configuration > Website > Edit Header
+  → Hide/remove the default header (set to blank or minimal)
+  → The custom navbar handles scroll, mobile menu, and active links
+
+Recommendation: Option A is easier. Option B matches the design exactly.
+
+═══════════════════════════════════════════════════════════════════
+  CONTACT FORM — CONNECTING TO A BACKEND
+═══════════════════════════════════════════════════════════════════
+
+The form currently shows a success message on submit (client-side
+only — no emails are sent). To connect it to a real backend:
+
+OPTION A: Odoo CRM / Leads
+  Replace the <form> submit handler in script.js:
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      // POST to Odoo's web/dataset/call_kw or use odoo-rpc
+      // to create a CRM lead. See Odoo developer docs.
+    });
+
+OPTION B: Formspree (simplest, no backend needed)
+  Change the <form> tag to:
+    <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+  Remove the preventDefault() from script.js contact form section.
+  Sign up free at formspree.io to get a form ID.
+
+OPTION C: EmailJS (sends email directly from browser)
+  Add EmailJS SDK and replace the submit handler.
+  See: emailjs.com/docs/sdk/installation
+
+═══════════════════════════════════════════════════════════════════
+  CUSTOMIZATION QUICK REFERENCE
+═══════════════════════════════════════════════════════════════════
+
+CHANGE BRAND COLORS:
+  In styles.css, update these CSS variables at the top:
+    --ak-primary:  #1a2a5e   ← Navy blue
+    --ak-accent:   #f59e0b   ← Amber orange
+
+CHANGE PHONE NUMBER:
+  Search and replace "+1 (209) 326-1479" and "tel:+12093261479"
+  across all HTML files.
+
+CHANGE EMAIL:
+  Search and replace "info@aekamber.com" across all HTML files.
+
+CHANGE HERO IMAGES:
+  In index.html, find the lines:
+    <div class="ak-carousel-slide" style="background-image:url('...')">
+  Replace the URL with your own image URLs.
+
+CHANGE FONT:
+  In styles.css, find the @import line and replace 'Poppins'
+  with any Google Font. Also update --ak-font if you add that var.
+
+ADD/REMOVE FAQ ITEMS:
+  In index.html, copy any .ak-faq-item block and update the
+  .ak-faq-q text and .ak-faq-a text.
+
+ADD/REMOVE SERVICE CARDS:
+  In services.html or index.html tabs, copy/paste a .ak-service-card
+  block. Update icon emoji, title, description, and feature list.
+
+═══════════════════════════════════════════════════════════════════
+  SUPPORT & CREDITS
+═══════════════════════════════════════════════════════════════════
+  Website: aekamber.com
+  Phone:   +1 (209) 326-1479
+  Email:   info@aekamber.com
+
+  Hero background images: Unsplash (free to use)
+  Font: Poppins via Google Fonts (free, open source)
+  All code: plain HTML5 / CSS3 / ES5 JavaScript
+═══════════════════════════════════════════════════════════════════
